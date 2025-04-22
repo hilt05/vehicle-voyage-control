@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { CarFront, MoreVertical, FileEdit, AlertCircle } from "lucide-react";
+import { CarFront, MoreVertical, FileEdit, AlertCircle, Plus, Trash2 } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 import {
   Table,
@@ -23,6 +23,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Modal from "@/components/ui/modal";
+import VehicleForm from "@/components/vehicle/VehicleForm";
+import VehicleDetails from "@/components/vehicle/VehicleDetails";
+import { toast } from "sonner";
 
 // Mock data for demonstration
 const mockVehicles = [
@@ -88,13 +92,85 @@ const mockVehicles = [
   },
 ];
 
+type Vehicle = (typeof mockVehicles)[0];
+type ModalType = "none" | "add" | "edit" | "delete" | "view";
+
 const VehicleList = () => {
+  const [vehicles, setVehicles] = useState<Vehicle[]>(mockVehicles);
+  const [modalType, setModalType] = useState<ModalType>("none");
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+
+  const closeModal = () => {
+    setModalType("none");
+    setSelectedVehicle(null);
+  };
+
+  const handleAddVehicle = (data: Omit<Vehicle, "id">) => {
+    // Generate a new ID using a simple format
+    const newId = `VHC-${1000 + vehicles.length + 1}`;
+    const newVehicle = {
+      id: newId,
+      ...data,
+    } as Vehicle;
+
+    setVehicles([...vehicles, newVehicle]);
+    toast.success("Vehicle added successfully");
+    closeModal();
+  };
+
+  const handleEditVehicle = (data: Partial<Vehicle>) => {
+    if (!selectedVehicle) return;
+    
+    const updatedVehicles = vehicles.map((vehicle) => 
+      vehicle.id === selectedVehicle.id ? { ...vehicle, ...data } : vehicle
+    );
+    
+    setVehicles(updatedVehicles);
+    toast.success("Vehicle updated successfully");
+    closeModal();
+  };
+
+  const handleDeleteVehicle = () => {
+    if (!selectedVehicle) return;
+    
+    const updatedVehicles = vehicles.filter(
+      (vehicle) => vehicle.id !== selectedVehicle.id
+    );
+    
+    setVehicles(updatedVehicles);
+    toast.success("Vehicle deleted successfully");
+    closeModal();
+  };
+
+  const openAddModal = () => {
+    setModalType("add");
+    setSelectedVehicle(null);
+  };
+
+  const openEditModal = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setModalType("edit");
+  };
+
+  const openDeleteModal = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setModalType("delete");
+  };
+
+  const openViewModal = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setModalType("view");
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex justify-between items-center">
         <h2 className="text-lg font-semibold">Vehicle Fleet</h2>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <CarFront className="mr-2 h-4 w-4" /> Add Vehicle
+        <Button 
+          className="bg-blue-600 hover:bg-blue-700"
+          onClick={openAddModal}
+        >
+          <Plus className="mr-2 h-4 w-4" /> Add Vehicle
         </Button>
       </div>
       
@@ -113,8 +189,11 @@ const VehicleList = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {mockVehicles.map((vehicle) => (
-              <TableRow key={vehicle.id}>
+            {vehicles.map((vehicle) => (
+              <TableRow key={vehicle.id} 
+                className="cursor-pointer hover:bg-slate-50"
+                onClick={() => openViewModal(vehicle)}
+              >
                 <TableCell className="font-medium">{vehicle.id}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -150,7 +229,7 @@ const VehicleList = () => {
                     <span className="text-xs font-medium">{vehicle.fuelLevel}%</span>
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
+                <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -158,13 +237,17 @@ const VehicleList = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openEditModal(vehicle)}>
                         <FileEdit className="mr-2 h-4 w-4" /> 
                         Edit Details
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openDeleteModal(vehicle)} className="text-red-600">
+                        <Trash2 className="mr-2 h-4 w-4" /> 
+                        Delete Vehicle
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openViewModal(vehicle)}>
                         <AlertCircle className="mr-2 h-4 w-4" /> 
-                        Report Issue
+                        View Details
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -174,6 +257,67 @@ const VehicleList = () => {
           </TableBody>
         </Table>
       </div>
+
+      {/* Add/Edit Vehicle Modal */}
+      <Modal 
+        isOpen={modalType === "add" || modalType === "edit"} 
+        onClose={closeModal}
+        size="lg"
+      >
+        <VehicleForm 
+          initialData={modalType === "edit" ? selectedVehicle || undefined : undefined}
+          onSubmit={modalType === "add" ? handleAddVehicle : handleEditVehicle}
+          onCancel={closeModal}
+        />
+      </Modal>
+
+      {/* View Vehicle Details Modal */}
+      <Modal 
+        isOpen={modalType === "view"} 
+        onClose={closeModal}
+        size="lg"
+      >
+        {selectedVehicle && (
+          <VehicleDetails 
+            vehicle={selectedVehicle}
+            onEdit={() => setModalType("edit")}
+            onDelete={() => setModalType("delete")}
+            onClose={closeModal}
+          />
+        )}
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal 
+        isOpen={modalType === "delete"} 
+        onClose={closeModal}
+        size="sm"
+      >
+        <div className="p-6 flex flex-col items-center text-center">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <Trash2 className="h-6 w-6 text-red-600" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Delete Vehicle</h3>
+          <p className="text-slate-600 mb-6">
+            Are you sure you want to delete {selectedVehicle?.name}? This action cannot be undone.
+          </p>
+          <div className="flex gap-3 w-full">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="flex-1 bg-red-600 hover:bg-red-700"
+              onClick={handleDeleteVehicle}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
