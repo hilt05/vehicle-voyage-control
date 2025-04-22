@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Car, Sliders, BarChart2, Wrench, Settings, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ interface SidebarProps {
 
 const Sidebar = ({ className }: SidebarProps) => {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -39,11 +41,41 @@ const Sidebar = ({ className }: SidebarProps) => {
 
       <nav className="flex-1 py-6">
         <ul className="space-y-2">
-          <SidebarItem icon={<BarChart2 />} label="Dashboard" active={true} collapsed={collapsed} />
-          <SidebarItem icon={<Car />} label="Vehicles" collapsed={collapsed} />
-          <SidebarItem icon={<Wrench />} label="Maintenance" collapsed={collapsed} />
-          <SidebarItem icon={<Sliders />} label="Reports" collapsed={collapsed} />
-          <SidebarItem icon={<Settings />} label="Settings" collapsed={collapsed} />
+          <SidebarItem 
+            icon={<BarChart2 />} 
+            label="Dashboard" 
+            to="/" 
+            active={location.pathname === "/"} 
+            collapsed={collapsed} 
+          />
+          <SidebarItem 
+            icon={<Car />} 
+            label="Vehicles" 
+            to="/vehicles" 
+            active={location.pathname === "/vehicles"} 
+            collapsed={collapsed} 
+          />
+          <SidebarItem 
+            icon={<Wrench />} 
+            label="Maintenance" 
+            to="/maintenance" 
+            active={location.pathname === "/maintenance"} 
+            collapsed={collapsed} 
+          />
+          <SidebarItem 
+            icon={<BarChart2 />} 
+            label="Reports" 
+            to="/reports" 
+            active={location.pathname === "/reports"} 
+            collapsed={collapsed} 
+          />
+          <SidebarItem 
+            icon={<Settings />} 
+            label="Settings" 
+            to="/settings" 
+            active={location.pathname === "/settings"} 
+            collapsed={collapsed} 
+          />
         </ul>
       </nav>
 
@@ -61,15 +93,16 @@ const Sidebar = ({ className }: SidebarProps) => {
 interface SidebarItemProps {
   icon: React.ReactNode;
   label: string;
+  to: string;
   active?: boolean;
   collapsed: boolean;
 }
 
-const SidebarItem = ({ icon, label, active = false, collapsed }: SidebarItemProps) => {
+const SidebarItem = ({ icon, label, to, active = false, collapsed }: SidebarItemProps) => {
   return (
     <li>
-      <a
-        href="#"
+      <Link
+        to={to}
         className={cn(
           "flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors",
           active
@@ -80,7 +113,7 @@ const SidebarItem = ({ icon, label, active = false, collapsed }: SidebarItemProp
       >
         <span className="text-lg">{icon}</span>
         {!collapsed && <span>{label}</span>}
-      </a>
+      </Link>
     </li>
   );
 };
