@@ -1,7 +1,6 @@
-
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, FileChart, FileBarChart, AlertTriangle, FileSearch } from "lucide-react";
+import { FileText, FileBarChart, AlertTriangle, FileSearch } from "lucide-react";
 
 const ReportNavItem = ({ icon, label, path, description }: { 
   icon: React.ReactNode; 
@@ -88,7 +87,7 @@ const Reports = () => {
               path="/reports/status"
             />
             <ReportNavItem 
-              icon={<FileChart className="w-5 h-5 text-green-600" />} 
+              icon={<FileText className="w-5 h-5 text-green-600" />} 
               label="Maintenance"
               description="Maintenance costs and frequency analysis over time"
               path="/reports/maintenance"

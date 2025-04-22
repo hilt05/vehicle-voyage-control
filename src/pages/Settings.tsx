@@ -1,7 +1,6 @@
-
 import { useLocation, Link, Outlet } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Tags, Tool, Settings2, Save, Bell } from "lucide-react";
+import { Users, Tags, Wrench, Settings2, Save, Bell } from "lucide-react";
 
 const SettingNavItem = ({ icon, label, path, description }: { 
   icon: React.ReactNode; 
@@ -34,7 +33,6 @@ const SettingNavItem = ({ icon, label, path, description }: {
 const Settings = () => {
   const location = useLocation();
   
-  // If we're on a subpage, render the outlet
   if (location.pathname !== "/settings") {
     return <Outlet />;
   }
@@ -67,7 +65,7 @@ const Settings = () => {
             />
             
             <SettingNavItem 
-              icon={<Tool className="w-5 h-5" />} 
+              icon={<Wrench className="w-5 h-5" />} 
               label="Service Types"
               description="Configure maintenance service types and tasks"
               path="/settings/services"
