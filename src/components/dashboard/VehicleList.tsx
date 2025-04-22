@@ -28,6 +28,9 @@ import VehicleForm from "@/components/vehicle/VehicleForm";
 import VehicleDetails from "@/components/vehicle/VehicleDetails";
 import { toast } from "sonner";
 
+// Define the status type to ensure type safety
+type StatusType = 'active' | 'maintenance' | 'issue' | 'idle';
+
 // Mock data for demonstration
 const mockVehicles = [
   {
@@ -37,7 +40,7 @@ const mockVehicles = [
     plate: "ABC-1234",
     driver: "John Doe",
     lastService: "2025-02-15",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 75,
   },
   {
@@ -47,7 +50,7 @@ const mockVehicles = [
     plate: "XYZ-5678",
     driver: "Jane Smith",
     lastService: "2025-03-20",
-    status: "maintenance",
+    status: "maintenance" as StatusType,
     fuelLevel: 45,
   },
   {
@@ -57,7 +60,7 @@ const mockVehicles = [
     plate: "DEF-9012",
     driver: "Mike Johnson",
     lastService: "2024-12-10",
-    status: "issue",
+    status: "issue" as StatusType,
     fuelLevel: 30,
   },
   {
@@ -67,7 +70,7 @@ const mockVehicles = [
     plate: "GHI-3456",
     driver: "Sarah Williams",
     lastService: "2025-01-05",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 90,
   },
   {
@@ -77,7 +80,7 @@ const mockVehicles = [
     plate: "JKL-7890",
     driver: "Robert Brown",
     lastService: "2025-04-01",
-    status: "idle",
+    status: "idle" as StatusType,
     fuelLevel: 60,
   },
   {
@@ -87,12 +90,23 @@ const mockVehicles = [
     plate: "MNO-1234",
     driver: "Emily Davis",
     lastService: "2025-03-15",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 85,
   },
 ];
 
-type Vehicle = (typeof mockVehicles)[0];
+// Define the Vehicle type based on the mock data structure
+type Vehicle = {
+  id: string;
+  name: string;
+  type: string;
+  plate: string;
+  driver: string;
+  lastService: string;
+  status: StatusType;
+  fuelLevel: number;
+};
+
 type ModalType = "none" | "add" | "edit" | "delete" | "view";
 
 const VehicleList = () => {

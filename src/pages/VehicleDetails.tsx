@@ -1,14 +1,29 @@
-
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, Car } from "lucide-react";
-import Sidebar from "@/components/layout/Sidebar";
-import Header from "@/components/layout/Header";
+import { ArrowLeft, FileEdit, Car, Calendar, User, Hash, Fuel, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import VehicleDetailsComponent from "@/components/vehicle/VehicleDetails";
+import StatusBadge from "@/components/ui/StatusBadge";
+import Modal from "@/components/ui/modal";
+import VehicleForm from "@/components/vehicle/VehicleForm";
+import { toast } from "sonner";
 
-// Mock data - in a real app, you would fetch this from an API
-const mockVehicles = [
+// Define the status type to match the StatusBadge component
+type StatusType = 'active' | 'maintenance' | 'issue' | 'idle';
+
+// Mock data for demonstration - Define the Vehicle type
+type Vehicle = {
+  id: string;
+  name: string;
+  type: string;
+  plate: string;
+  driver: string;
+  lastService: string;
+  status: StatusType;
+  fuelLevel: number;
+};
+
+// Mock vehicle data for the details page
+const mockVehicles: Vehicle[] = [
   {
     id: "VHC-1001",
     name: "Toyota Camry",
@@ -16,7 +31,7 @@ const mockVehicles = [
     plate: "ABC-1234",
     driver: "John Doe",
     lastService: "2025-02-15",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 75,
   },
   {
@@ -26,7 +41,7 @@ const mockVehicles = [
     plate: "XYZ-5678",
     driver: "Jane Smith",
     lastService: "2025-03-20",
-    status: "maintenance",
+    status: "maintenance" as StatusType,
     fuelLevel: 45,
   },
   {
@@ -36,7 +51,7 @@ const mockVehicles = [
     plate: "DEF-9012",
     driver: "Mike Johnson",
     lastService: "2024-12-10",
-    status: "issue",
+    status: "issue" as StatusType,
     fuelLevel: 30,
   },
   {
@@ -46,7 +61,7 @@ const mockVehicles = [
     plate: "GHI-3456",
     driver: "Sarah Williams",
     lastService: "2025-01-05",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 90,
   },
   {
@@ -56,7 +71,7 @@ const mockVehicles = [
     plate: "JKL-7890",
     driver: "Robert Brown",
     lastService: "2025-04-01",
-    status: "idle",
+    status: "idle" as StatusType,
     fuelLevel: 60,
   },
   {
@@ -66,91 +81,158 @@ const mockVehicles = [
     plate: "MNO-1234",
     driver: "Emily Davis",
     lastService: "2025-03-15",
-    status: "active",
+    status: "active" as StatusType,
     fuelLevel: 85,
   },
 ];
 
-type Vehicle = (typeof mockVehicles)[0];
-
-const VehicleDetailsPage = () => {
+const VehicleDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [vehicle, setVehicle] = useState<Vehicle | undefined>(undefined);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    // Simulate API fetch
-    setLoading(true);
-    setTimeout(() => {
-      const foundVehicle = mockVehicles.find(v => v.id === id) || null;
+    if (id) {
+      const foundVehicle = mockVehicles.find((v) => v.id === id);
       setVehicle(foundVehicle);
-      setLoading(false);
-    }, 500);
+    }
   }, [id]);
 
-  const handleEdit = () => {
-    // In a real app, you would navigate to an edit page or open a modal
-    console.log("Edit vehicle", id);
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
   };
 
-  const handleDelete = () => {
-    // In a real app, you would show a confirmation dialog and delete the vehicle
-    console.log("Delete vehicle", id);
-    navigate("/");
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false);
   };
+
+  const handleUpdateVehicle = (updatedVehicle: Omit<Vehicle, "id">) => {
+    if (!vehicle) return;
+
+    // Find the index of the vehicle to update
+    const vehicleIndex = mockVehicles.findIndex((v) => v.id === vehicle.id);
+
+    if (vehicleIndex === -1) {
+      toast.error("Vehicle not found in the mock data.");
+      return;
+    }
+
+    // Update the vehicle in the mock data array
+    mockVehicles[vehicleIndex] = {
+      ...vehicle,
+      ...updatedVehicle,
+    };
+
+    // Update the state with the updated vehicle
+    setVehicle({
+      ...vehicle,
+      ...updatedVehicle,
+    });
+
+    toast.success("Vehicle details updated successfully!");
+    handleCloseEditModal();
+  };
+
+  if (!vehicle) {
+    return (
+      <div className="container mx-auto p-4">
+        <Button variant="ghost" onClick={() => navigate(-1)}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        <div className="flex items-center justify-center h-48">
+          <span className="text-slate-500">Vehicle not found.</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <Sidebar />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-        
-        <main className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            <Button
-              variant="ghost"
-              className="flex items-center text-slate-600 hover:text-slate-900"
-              onClick={() => navigate("/")}
-            >
-              <ChevronLeft className="mr-1 h-4 w-4" />
-              Back to Dashboard
+    <div className="container mx-auto p-4">
+      <Button variant="ghost" onClick={() => navigate(-1)}>
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back
+      </Button>
+
+      <div className="bg-white rounded-lg shadow-md p-8 mt-4">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold flex items-center gap-2">
+            <Car className="h-6 w-6" />
+            {vehicle.name}
+          </h2>
+          <div className="space-x-2">
+            <Button onClick={handleEditClick} variant="outline">
+              <FileEdit className="mr-2 h-4 w-4" />
+              Edit
             </Button>
-            
-            {loading ? (
-              <div className="p-12 flex justify-center">
-                <div className="animate-pulse flex flex-col items-center">
-                  <div className="rounded-full bg-slate-200 h-12 w-12 mb-4"></div>
-                  <div className="h-4 bg-slate-200 rounded w-32 mb-3"></div>
-                  <div className="h-3 bg-slate-200 rounded w-24"></div>
-                </div>
-              </div>
-            ) : vehicle ? (
-              <VehicleDetailsComponent 
-                vehicle={vehicle} 
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onClose={() => navigate("/")} 
-              />
-            ) : (
-              <div className="bg-white p-12 rounded-xl border border-slate-200 flex flex-col items-center justify-center text-center">
-                <Car className="h-16 w-16 text-slate-300 mb-4" />
-                <h2 className="text-2xl font-bold text-slate-900 mb-2">Vehicle Not Found</h2>
-                <p className="text-slate-500 mb-6">The vehicle you're looking for doesn't exist or has been removed.</p>
-                <Button 
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={() => navigate("/")}
-                >
-                  Return to Dashboard
-                </Button>
-              </div>
-            )}
           </div>
-        </main>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 className="text-lg font-medium text-slate-700 mb-2">Vehicle Information</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <Hash className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">ID:</span>
+              <span>{vehicle.id}</span>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <Car className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">Type:</span>
+              <span>{vehicle.type}</span>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <Calendar className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">Last Service:</span>
+              <span>{new Date(vehicle.lastService).toLocaleDateString()}</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium text-slate-700 mb-2">Driver Information</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <User className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">Driver:</span>
+              <span>{vehicle.driver}</span>
+            </div>
+            <div className="flex items-center gap-2 mb-2">
+              <Hash className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">License Plate:</span>
+              <span>{vehicle.plate}</span>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium text-slate-700 mb-2">Status</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <StatusBadge status={vehicle.status} />
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium text-slate-700 mb-2">Fuel Level</h3>
+            <div className="flex items-center gap-2 mb-2">
+              <Fuel className="h-4 w-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-500">Fuel:</span>
+              <span>{vehicle.fuelLevel}%</span>
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Edit Vehicle Modal */}
+      <Modal isOpen={isEditModalOpen} onClose={handleCloseEditModal} title="Edit Vehicle Details" size="lg">
+        <VehicleForm
+          initialData={vehicle}
+          onSubmit={(updatedVehicle) => {
+            handleUpdateVehicle(updatedVehicle as Omit<Vehicle, "id">);
+          }}
+          onCancel={handleCloseEditModal}
+        />
+      </Modal>
     </div>
   );
 };
 
-export default VehicleDetailsPage;
+export default VehicleDetails;
