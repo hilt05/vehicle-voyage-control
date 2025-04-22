@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/select";
 
 const Filters = () => {
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [typeFilter, setTypeFilter] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [typeFilter, setTypeFilter] = useState<string>("all");
   
   return (
     <div className="flex flex-col md:flex-row gap-4 p-4 bg-white rounded-xl shadow-sm border border-slate-200">
@@ -32,7 +32,7 @@ const Filters = () => {
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All statuses</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="maintenance">In Maintenance</SelectItem>
             <SelectItem value="issue">Issue Reported</SelectItem>
@@ -48,7 +48,7 @@ const Filters = () => {
             <SelectValue placeholder="All types" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All types</SelectItem>
+            <SelectItem value="all">All types</SelectItem>
             <SelectItem value="sedan">Sedan</SelectItem>
             <SelectItem value="suv">SUV</SelectItem>
             <SelectItem value="truck">Truck</SelectItem>
