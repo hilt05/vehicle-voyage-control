@@ -214,19 +214,24 @@ const ServiceProviders = () => {
 
   const handleSubmit = (data: Omit<ServiceProvider, 'id' | 'maintenanceCount' | 'lastService'>) => {
     if (isAddDialogOpen) {
-      // Add new provider
+      // Add new provider - ensure status is correctly typed
       const newProvider: ServiceProvider = {
         ...data,
         id: `sp${providers.length + 1}`,
-        maintenanceCount: 0
+        maintenanceCount: 0,
+        status: data.status as "active" | "inactive" // Ensure it's properly typed
       };
       setProviders([...providers, newProvider]);
       setFilteredProviders([...providers, newProvider]);
       setIsAddDialogOpen(false);
     } else if (isEditDialogOpen && currentProvider) {
-      // Update existing provider
+      // Update existing provider - ensure status is correctly typed
       const updatedProviders = providers.map(p => 
-        p.id === currentProvider.id ? { ...p, ...data } : p
+        p.id === currentProvider.id ? { 
+          ...p, 
+          ...data,
+          status: data.status as "active" | "inactive" // Ensure it's properly typed
+        } : p
       );
       setProviders(updatedProviders);
       setFilteredProviders(updatedProviders);
