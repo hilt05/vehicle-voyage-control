@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -93,7 +92,6 @@ const mockData: MaintenanceEntry[] = [
       },
     ],
   },
-  // ... more items as needed
 ];
 
 function exportToCSV(data: MaintenanceEntry[]) {
@@ -169,7 +167,7 @@ const MaintenanceHistoryTable: React.FC = () => {
   const [page, setPage] = useState(1);
 
   // Simulate uploads if in-memory only
-  const [attachments, setAttachments] = useState<{ [id: string]: AttachmentPreviewProps["attachments"] }>({});
+  const [attachments, setAttachments] = useState<{ [id: string]: { name: string; url: string; type: string }[] }>({});
 
   const filteredData = useMemo(() => {
     let rows = mockData;
@@ -240,7 +238,7 @@ const MaintenanceHistoryTable: React.FC = () => {
             onChange={e => setQuery(e.target.value)}
             placeholder="Search by plate, model, notes..."
             className="w-full md:w-60"
-            startIcon={<Search />}
+            startIcon={<Search className="h-4 w-4" />}
           />
 
           <select
@@ -273,7 +271,6 @@ const MaintenanceHistoryTable: React.FC = () => {
               <option value={v} key={i}>{v}</option>
             ))}
           </select>
-          {/* Date filter */}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="w-full md:w-40 px-2 justify-between text-left font-normal">
@@ -406,7 +403,6 @@ const MaintenanceHistoryTable: React.FC = () => {
                 }}
                 aria-disabled={page === 1}
                 tabIndex={page === 1 ? -1 : 0}
-                as="button"
               />
             </PaginationItem>
             {[...Array(totalPages).keys()].map(i => (
@@ -417,7 +413,6 @@ const MaintenanceHistoryTable: React.FC = () => {
                     e.preventDefault();
                     setPage(i + 1);
                   }}
-                  as="button"
                 >
                   {i + 1}
                 </PaginationLink>
@@ -431,7 +426,6 @@ const MaintenanceHistoryTable: React.FC = () => {
                 }}
                 aria-disabled={page === totalPages}
                 tabIndex={page === totalPages ? -1 : 0}
-                as="button"
               />
             </PaginationItem>
           </PaginationContent>
