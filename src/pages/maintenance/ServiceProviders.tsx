@@ -221,18 +221,22 @@ const ServiceProviders = () => {
         maintenanceCount: 0,
         status: data.status as "active" | "inactive" // Ensure it's properly typed
       };
-      setProviders([...providers, newProvider]);
-      setFilteredProviders([...providers, newProvider]);
+      
+      // Create a new array with the proper ServiceProvider type
+      const updatedProviders: ServiceProvider[] = [...providers, newProvider];
+      setProviders(updatedProviders);
+      setFilteredProviders(updatedProviders);
       setIsAddDialogOpen(false);
     } else if (isEditDialogOpen && currentProvider) {
       // Update existing provider - ensure status is correctly typed
-      const updatedProviders = providers.map(p => 
+      const updatedProviders: ServiceProvider[] = providers.map(p => 
         p.id === currentProvider.id ? { 
           ...p, 
           ...data,
           status: data.status as "active" | "inactive" // Ensure it's properly typed
         } : p
       );
+      
       setProviders(updatedProviders);
       setFilteredProviders(updatedProviders);
       setIsEditDialogOpen(false);
@@ -240,7 +244,7 @@ const ServiceProviders = () => {
   };
 
   const toggleProviderStatus = (provider: ServiceProvider) => {
-    const updatedProviders = providers.map(p => 
+    const updatedProviders: ServiceProvider[] = providers.map(p => 
       p.id === provider.id 
         ? { ...p, status: p.status === "active" ? "inactive" : "active" } 
         : p
