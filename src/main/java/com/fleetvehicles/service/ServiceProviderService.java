@@ -22,7 +22,7 @@ public class ServiceProviderService {
 
     public List<ServiceProvider> getServiceProvidersByStatus(String status) {
         try {
-            ProviderStatus providerStatus = ProviderStatus.valueOf(status);
+            ProviderStatus providerStatus = ProviderStatus.fromValue(status);
             return serviceProviderRepository.findByStatus(providerStatus);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid status value: " + status);
@@ -49,6 +49,8 @@ public class ServiceProviderService {
             existingProvider.setNotes(serviceProviderDetails.getNotes());
             existingProvider.setWebsite(serviceProviderDetails.getWebsite());
             existingProvider.setStatus(serviceProviderDetails.getStatus());
+            existingProvider.setMaintenanceCount(serviceProviderDetails.getMaintenanceCount());
+            existingProvider.setLastService(serviceProviderDetails.getLastService());
             
             return serviceProviderRepository.save(existingProvider);
         });
@@ -63,8 +65,8 @@ public class ServiceProviderService {
 
     public Optional<ServiceProvider> toggleServiceProviderStatus(Long id) {
         return serviceProviderRepository.findById(id).map(provider -> {
-            ProviderStatus newStatus = provider.getStatus() == ProviderStatus.active ? 
-                                      ProviderStatus.inactive : ProviderStatus.active;
+            ProviderStatus newStatus = provider.getStatus() == ProviderStatus.ACTIVE ? 
+                                      ProviderStatus.INACTIVE : ProviderStatus.ACTIVE;
             provider.setStatus(newStatus);
             return serviceProviderRepository.save(provider);
         });
