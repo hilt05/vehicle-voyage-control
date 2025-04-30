@@ -34,6 +34,10 @@ import SystemPreferences from "./pages/settings/SystemPreferences";
 import BackupRestore from "./pages/settings/BackupRestore";
 import NotificationSettings from "./pages/settings/NotificationSettings";
 
+// Dashboard components
+import Stats from "@/components/dashboard/Stats";
+import VehicleList from "@/components/dashboard/VehicleList";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -43,38 +47,49 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/vehicles" element={<Vehicles />} />
-          <Route path="/vehicles/:id" element={<VehicleDetails />} />
-          
-          {/* Maintenance Routes */}
-          <Route path="/maintenance" element={<Maintenance />}>
-            <Route path="upcoming" element={<UpcomingMaintenance />} />
-            <Route path="history" element={<MaintenanceHistory />} />
-            <Route path="schedule" element={<ScheduleMaintenance />} />
-            <Route path="parts" element={<PartsInventory />} />
-            <Route path="providers" element={<ServiceProviders />} />
+          <Route path="/" element={<Index />}>
+            {/* Dashboard as default route */}
+            <Route index element={
+              <>
+                <Stats />
+                <VehicleList />
+              </>
+            } />
+            
+            {/* Vehicles routes */}
+            <Route path="vehicles" element={<Vehicles />} />
+            <Route path="vehicles/:id" element={<VehicleDetails />} />
+            
+            {/* Maintenance Routes */}
+            <Route path="maintenance" element={<Maintenance />}>
+              <Route path="upcoming" element={<UpcomingMaintenance />} />
+              <Route path="history" element={<MaintenanceHistory />} />
+              <Route path="schedule" element={<ScheduleMaintenance />} />
+              <Route path="parts" element={<PartsInventory />} />
+              <Route path="providers" element={<ServiceProviders />} />
+            </Route>
+            
+            {/* Reports Routes */}
+            <Route path="reports" element={<Reports />}>
+              <Route path="status" element={<VehicleStatusReport />} />
+              <Route path="maintenance" element={<MaintenanceReport />} />
+              <Route path="usage" element={<UsageReport />} />
+              <Route path="incidents" element={<IncidentReport />} />
+              <Route path="custom" element={<CustomReports />} />
+            </Route>
+            
+            {/* Settings Routes */}
+            <Route path="settings" element={<Settings />}>
+              <Route path="users" element={<UserManagement />} />
+              <Route path="categories" element={<VehicleCategories />} />
+              <Route path="services" element={<ServiceTypes />} />
+              <Route path="preferences" element={<SystemPreferences />} />
+              <Route path="backup" element={<BackupRestore />} />
+              <Route path="notifications" element={<NotificationSettings />} />
+            </Route>
           </Route>
           
-          {/* Reports Routes */}
-          <Route path="/reports" element={<Reports />}>
-            <Route path="status" element={<VehicleStatusReport />} />
-            <Route path="maintenance" element={<MaintenanceReport />} />
-            <Route path="usage" element={<UsageReport />} />
-            <Route path="incidents" element={<IncidentReport />} />
-            <Route path="custom" element={<CustomReports />} />
-          </Route>
-          
-          {/* Settings Routes */}
-          <Route path="/settings" element={<Settings />}>
-            <Route path="users" element={<UserManagement />} />
-            <Route path="categories" element={<VehicleCategories />} />
-            <Route path="services" element={<ServiceTypes />} />
-            <Route path="preferences" element={<SystemPreferences />} />
-            <Route path="backup" element={<BackupRestore />} />
-            <Route path="notifications" element={<NotificationSettings />} />
-          </Route>
-          
+          {/* 404 route outside of the layout */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

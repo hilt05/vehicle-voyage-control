@@ -1,17 +1,26 @@
 
-import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
-import Stats from "@/components/dashboard/Stats";
-import Filters from "@/components/dashboard/Filters";
-import VehicleList from "@/components/dashboard/VehicleList";
+import { 
+  SidebarProvider, 
+  Sidebar as ShadcnSidebar,
+  SidebarContent, 
+  SidebarInset 
+} from "@/components/ui/sidebar";
 
 const Index = () => {
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50">
-      <Sidebar />
+    <SidebarProvider defaultOpen={true}>
+      {/* Sidebar component */}
+      <ShadcnSidebar collapsible="none" variant="sidebar">
+        <SidebarContent>
+          <Sidebar />
+        </SidebarContent>
+      </ShadcnSidebar>
       
-      <div className="flex-1 flex flex-col ml-64">
+      {/* Main content area */}
+      <SidebarInset className="bg-slate-50">
         <Header />
         
         <main className="flex-1 overflow-y-auto p-6 mt-16">
@@ -23,15 +32,12 @@ const Index = () => {
               </div>
             </div>
             
-            <Stats />
-            
-            <Filters />
-            
-            <VehicleList />
+            {/* Render the current route or fallback to dashboard content */}
+            <Outlet />
           </div>
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 
