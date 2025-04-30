@@ -31,11 +31,14 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
+  // Set collapsed state to false permanently
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
+  // Toggle function is kept but won't be used since we want sidebar permanently expanded
   const toggleSidebar = () => {
-    setCollapsed(!collapsed);
+    // This function is intentionally kept but not changing the state
+    // so the sidebar remains expanded
   };
 
   // Determine if a path is active or one of its subpaths is active
@@ -50,11 +53,11 @@ const Sidebar = ({ className }: SidebarProps) => {
     <div
       className={cn(
         "h-screen bg-slate-900 text-white transition-all duration-300 flex flex-col",
-        collapsed ? "w-20" : "w-64",
+        "w-64", // Always use expanded width
         className
       )}
     >
-      <SidebarHeader collapsed={collapsed} toggleSidebar={toggleSidebar} />
+      <SidebarHeader collapsed={false} toggleSidebar={toggleSidebar} />
 
       <nav className="flex-1 py-6 overflow-y-auto scrollbar-thin">
         <ul className="space-y-2">
@@ -63,7 +66,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             label="Dashboard" 
             to="/" 
             active={location.pathname === "/"} 
-            collapsed={collapsed} 
+            collapsed={false} 
           />
           
           <SidebarItem 
@@ -71,7 +74,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             label="Vehicles" 
             to="/vehicles" 
             active={isPathActive("/vehicles")} 
-            collapsed={collapsed} 
+            collapsed={false} 
           />
           
           <SidebarItem 
@@ -79,7 +82,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             label="Maintenance" 
             to="/maintenance" 
             active={isPathActive("/maintenance")} 
-            collapsed={collapsed}
+            collapsed={false}
             subItems={[
               { 
                 label: "Upcoming Maintenance", 
@@ -114,7 +117,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             label="Reports" 
             to="/reports" 
             active={isPathActive("/reports")} 
-            collapsed={collapsed}
+            collapsed={false}
             subItems={[
               { 
                 label: "Vehicle Status", 
@@ -149,7 +152,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             label="Settings" 
             to="/settings" 
             active={isPathActive("/settings")} 
-            collapsed={collapsed}
+            collapsed={false}
             subItems={[
               { 
                 label: "User Management", 
@@ -186,7 +189,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         </ul>
       </nav>
 
-      <SidebarFooter collapsed={collapsed} />
+      <SidebarFooter collapsed={false} />
     </div>
   );
 };
