@@ -52,7 +52,7 @@ const Sidebar = ({ className }: SidebarProps) => {
   return (
     <div
       className={cn(
-        "h-screen bg-slate-900 text-white transition-all duration-300 flex flex-col",
+        "fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 flex flex-col",
         "w-64", // Always use expanded width
         className
       )}

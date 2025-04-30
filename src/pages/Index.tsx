@@ -11,10 +11,10 @@ const Index = () => {
     <div className="flex h-screen overflow-hidden bg-slate-50">
       <Sidebar />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col ml-64">
         <Header />
         
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-6 mt-16">
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>

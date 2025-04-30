@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 
 const Header = () => {
   return (
-    <header className="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6">
+    <header className="fixed top-0 left-64 right-0 h-16 border-b border-slate-200 bg-white flex items-center justify-between px-6 z-10">
       <div className="flex items-center space-x-2 md:w-72">
         <div className="relative w-full">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500" />
