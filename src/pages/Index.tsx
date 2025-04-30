@@ -12,7 +12,7 @@ import {
 const Index = () => {
   return (
     <SidebarProvider defaultOpen={true}>
-      {/* Sidebar component */}
+      {/* Fixed sidebar with permanent visibility */}
       <ShadcnSidebar collapsible="none" variant="sidebar">
         <SidebarContent>
           <Sidebar />
@@ -20,19 +20,11 @@ const Index = () => {
       </ShadcnSidebar>
       
       {/* Main content area */}
-      <SidebarInset className="bg-slate-50">
+      <SidebarInset className="bg-slate-50 min-h-screen">
         <Header />
         
-        <main className="flex-1 overflow-y-auto p-6 mt-16">
+        <main className="flex-1 overflow-y-auto p-6 pt-20">
           <div className="max-w-7xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-              <div className="text-sm text-slate-500">
-                Last updated: {new Date().toLocaleString()}
-              </div>
-            </div>
-            
-            {/* Render the current route or fallback to dashboard content */}
             <Outlet />
           </div>
         </main>

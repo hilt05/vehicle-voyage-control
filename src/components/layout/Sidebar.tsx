@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { 
   Car, 
   BarChart2, 
@@ -12,34 +12,13 @@ import {
   Package, 
   Building,
   FileText,
-  FileBarChart,
-  AlertTriangle,
-  FileSearch,
-  Users,
-  Tags,
-  Settings2,
-  Save,
-  Bell
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SidebarItem from "./SidebarItem";
-import SidebarHeader from "./SidebarHeader";
-import SidebarFooter from "./SidebarFooter";
 
-interface SidebarProps {
-  className?: string;
-}
-
-const Sidebar = ({ className }: SidebarProps) => {
-  // Set collapsed state to false permanently
-  const [collapsed, setCollapsed] = useState(false);
+const Sidebar = ({ className }: { className?: string }) => {
+  const [collapsed] = useState(false);
   const location = useLocation();
-
-  // Toggle function is kept but won't be used since we want sidebar permanently expanded
-  const toggleSidebar = () => {
-    // This function is intentionally kept but not changing the state
-    // so the sidebar remains expanded
-  };
 
   // Determine if a path is active or one of its subpaths is active
   const isPathActive = (path: string) => {
@@ -52,12 +31,13 @@ const Sidebar = ({ className }: SidebarProps) => {
   return (
     <div
       className={cn(
-        "fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 flex flex-col",
-        "w-64", // Always use expanded width
+        "h-full bg-slate-900 text-white transition-all duration-300 flex flex-col overflow-y-auto",
         className
       )}
     >
-      <SidebarHeader collapsed={false} toggleSidebar={toggleSidebar} />
+      <div className="flex items-center justify-between p-4 border-b border-slate-800">
+        <h1 className="text-xl font-bold text-white">VehicleVoyage</h1>
+      </div>
 
       <nav className="flex-1 py-6 overflow-y-auto scrollbar-thin">
         <ul className="space-y-2">
@@ -189,7 +169,11 @@ const Sidebar = ({ className }: SidebarProps) => {
         </ul>
       </nav>
 
-      <SidebarFooter collapsed={false} />
+      <div className="p-4 border-t border-slate-800">
+        <div className="text-xs text-slate-400">
+          &copy; 2025 VehicleVoyage
+        </div>
+      </div>
     </div>
   );
 };
