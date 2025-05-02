@@ -2,11 +2,7 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "@/components/layout/Sidebar";
 import Header from "@/components/layout/Header";
-import { 
-  SidebarProvider, 
-  Sidebar as ShadcnSidebar,
-  SidebarContent
-} from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const Index = () => {
   return (

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { 
@@ -174,7 +175,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         </ul>
       </nav>
 
-      <SidebarFooter collapsed={false} />
+      <SidebarFooter />
     </div>
   );
 };
