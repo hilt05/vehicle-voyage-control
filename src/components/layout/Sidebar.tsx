@@ -11,15 +11,7 @@ import {
   FileClock, 
   Package, 
   Building,
-  FileText,
-  FileBarChart,
-  AlertTriangle,
-  FileSearch,
-  Users,
-  Tags,
-  Settings2,
-  Save,
-  Bell
+  FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SidebarItem from "./SidebarItem";

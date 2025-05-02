@@ -5,7 +5,7 @@ type SidebarFooterProps = {
 
 const SidebarFooter = ({ collapsed }: SidebarFooterProps) => {
   return (
-    <div className="p-4 border-t border-slate-800">
+    <div className="p-4 border-t border-slate-800 mt-auto">
       {!collapsed && (
         <div className="text-xs text-slate-400">
           &copy; 2025 VehicleVoyage

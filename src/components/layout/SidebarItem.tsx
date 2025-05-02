@@ -6,7 +6,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { SidebarItemProps, SubItemProps } from "@/types/sidebar";
 
 const SidebarItem = ({ icon, label, to, active = false, collapsed, subItems }: SidebarItemProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(active && subItems && subItems.length > 0);
   const hasSubItems = subItems && subItems.length > 0;
 
   const toggleSubMenu = (e: React.MouseEvent) => {
