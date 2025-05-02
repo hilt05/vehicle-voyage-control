@@ -1,16 +1,10 @@
 
-type SidebarFooterProps = {
-  collapsed: boolean;
-};
-
-const SidebarFooter = ({ collapsed }: SidebarFooterProps) => {
+const SidebarFooter = () => {
   return (
     <div className="p-4 border-t border-slate-800 mt-auto">
-      {!collapsed && (
-        <div className="text-xs text-slate-400">
-          &copy; 2025 VehicleVoyage
-        </div>
-      )}
+      <div className="text-xs text-slate-400">
+        &copy; 2025 VehicleVoyage
+      </div>
     </div>
   );
 };

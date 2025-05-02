@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { 
@@ -23,15 +22,9 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  // Set collapsed state to false permanently
-  const [collapsed, setCollapsed] = useState(false);
+  // Always expanded sidebar
+  const [collapsed] = useState(false);
   const location = useLocation();
-
-  // Toggle function is kept but won't be used since we want sidebar permanently expanded
-  const toggleSidebar = () => {
-    // This function is intentionally kept but not changing the state
-    // so the sidebar remains expanded
-  };
 
   // Determine if a path is active or one of its subpaths is active
   const isPathActive = (path: string) => {
@@ -49,7 +42,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         className
       )}
     >
-      <SidebarHeader collapsed={false} toggleSidebar={toggleSidebar} />
+      <SidebarHeader />
 
       <nav className="flex-1 py-6 overflow-y-auto scrollbar-thin">
         <ul className="space-y-2">
