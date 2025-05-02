@@ -118,7 +118,7 @@ const ServiceProviders = () => {
   const [providers, setProviders] = useState<ServiceProvider[]>(mockServiceProviders);
   const [filteredProviders, setFilteredProviders] = useState<ServiceProvider[]>(mockServiceProviders);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedServiceType, setSelectedServiceType] = useState<string>("");
+  const [selectedServiceType, setSelectedServiceType] = useState<string>("all"); // Changed default from empty to "all"
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -164,7 +164,7 @@ const ServiceProviders = () => {
       );
     }
     
-    if (serviceType) {
+    if (serviceType && serviceType !== "all") { // Modified this condition to check if not "all"
       filtered = filtered.filter(
         provider => provider.serviceTypes.includes(serviceType)
       );
@@ -278,7 +278,7 @@ const ServiceProviders = () => {
                     <SelectValue placeholder="Filter by service type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Service Types</SelectItem>
+                    <SelectItem value="all">All Service Types</SelectItem> {/* Changed from empty string to "all" */}
                     {serviceTypeOptions.map(type => (
                       <SelectItem key={type} value={type}>{type}</SelectItem>
                     ))}
