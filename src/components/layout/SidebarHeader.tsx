@@ -20,7 +20,7 @@ const SidebarHeader = ({ collapsed, toggleSidebar }: SidebarHeaderProps) => {
         variant="ghost"
         size="icon"
         onClick={toggleSidebar}
-        className="text-white hover:bg-slate-800 ml-auto"
+        className={`text-white hover:bg-slate-800 ${!collapsed ? "ml-auto" : ""}`}
       >
         {collapsed ? <Menu /> : <X />}
       </Button>
